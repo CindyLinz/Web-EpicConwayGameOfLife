@@ -4,8 +4,9 @@
   </head>
   <body>
     <center>
+      <button id=random_init>random</button>
       <label><input type=checkbox id=wrap_toggle> wrap</label>
-      <br>
+      <br><br>
       <canvas id=board></canvas>
     </center>
     <script>
@@ -15,11 +16,18 @@
             window.Life =
               { set_wrap: Module.cwrap('set_wrap', null, ['number'])
               , resize: Module.cwrap('resize', null, ['number', 'number'])
+              , random_init: Module.cwrap('random_init', null, [])
+              , render: Module.cwrap('render', null, [])
               };
 
             Life.set_wrap(document.querySelector('#wrap_toggle').checked ? 1 : 0);
             document.querySelector('#wrap_toggle').onchange = function(){
               Life.set_wrap(this.checked);
+            };
+
+            document.querySelector('#random_init').onclick = function(){
+              Life.random_init();
+              Life.render();
             };
           }
         }

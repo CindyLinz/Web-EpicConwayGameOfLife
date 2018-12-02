@@ -32,8 +32,19 @@ void render(){
     SDL_UpdateWindowSurface(window);
 }
 
-void set_wrap(int wrap){
-    Wrap = (bool) wrap;
+void random_init(){
+    int k=Width+3;
+    for(int i=1; i<=Height; ++i){
+        for(int j=1; j<=Width; ++j){
+            Buffer[0][k] = random() % 2;
+            ++k;
+        }
+        k += 2;
+    }
+}
+
+void set_wrap(bool wrap){
+    Wrap = wrap;
 }
 
 void resize(int width, int height){
@@ -44,21 +55,11 @@ void resize(int width, int height){
         Width = width;
         Height = height;
 
-        int k=Width+3;
-        for(int i=1; i<=Height; ++i){
-            for(int j=1; j<=Width; ++j){
-                Buffer[0][k] = random() % 2;
-                ++k;
-            }
-            k += 2;
-        }
-
         if( window )
             SDL_DestroyWindow(window);
         window = SDL_CreateWindow("", 0, 0, width, height, 0);
-
-        render();
     }
+    random_init();
 }
 
 void step(){
@@ -124,6 +125,7 @@ void main_loop(){
 int main(){
     SDL_Init(SDL_INIT_VIDEO);
     resize(200, 200);
+    render();
     //window = SDL_CreateWindow("", 0, 0, 100, 100, 0);
 
     emscripten_set_main_loop(main_loop, 0, 0);

@@ -1,4 +1,6 @@
 [ "_main"
 , "_resize"
 , "_set_wrap"
+, "_random_init"
+, "_render"
 ]
