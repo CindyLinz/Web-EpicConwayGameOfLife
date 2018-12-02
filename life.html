@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+    <canvas id=board></canvas>
+    <script>
+      Module = {
+        canvas: document.querySelector('#board')
+      }
+    </script>
+    <script src=life.js></script>
+    <script>
+      window.board_resize = Module.cwrap('resize', null, ['number', 'number']);
+    </script>
+  </body>
+</html>
