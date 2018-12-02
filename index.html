@@ -3,15 +3,27 @@
   <head>
   </head>
   <body>
-    <canvas id=board></canvas>
+    <center>
+      <label><input type=checkbox id=wrap_toggle> wrap</label>
+      <br>
+      <canvas id=board></canvas>
+    </center>
     <script>
-      Module = {
-        canvas: document.querySelector('#board')
-      }
+      Module =
+        { canvas: document.querySelector('#board')
+        , onRuntimeInitialized: function(){
+            window.Life =
+              { set_wrap: Module.cwrap('set_wrap', null, ['number'])
+              , resize: Module.cwrap('resize', null, ['number', 'number'])
+              };
+
+            Life.set_wrap(document.querySelector('#wrap_toggle').checked ? 1 : 0);
+            document.querySelector('#wrap_toggle').onchange = function(){
+              Life.set_wrap(this.checked);
+            };
+          }
+        }
     </script>
     <script src=life.js></script>
-    <script>
-      window.board_resize = Module.cwrap('resize', null, ['number', 'number']);
-    </script>
   </body>
 </html>

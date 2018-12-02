@@ -32,6 +32,10 @@ void render(){
     SDL_UpdateWindowSurface(window);
 }
 
+void set_wrap(int wrap){
+    Wrap = (bool) wrap;
+}
+
 void resize(int width, int height){
     if( width!=Width || height!=Height ){
         int size = (width+2)*(height+2);
