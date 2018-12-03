@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 #include <SDL2/SDL.h>
 
 #ifdef __EMSCRIPTEN__
@@ -12,6 +13,31 @@ char *Buffer[2] = {NULL, NULL};
 bool Wrap = false;
 SDL_Window * window = NULL;
 bool playing = false;
+float time_shift = 0;
+
+static inline int32_t pick_color(float hue){
+    if( hue < 0 )
+        hue += 1;
+    float c = 1;
+    float m = 0;
+    float hh = hue * 6;
+    float x = 1 - fabsf(fmodf(hh, 2) - 1);
+    int X = (int)(x * 255 + .5);
+    if( X<0 ) X = 0;
+    if( X>255 ) X = 255;
+    if( hh < 1 )
+        return 255 | X<<8 | 255<<24;
+    if( hh < 2 )
+        return X | 255<<8 | 255<<24;
+    if( hh < 3 )
+        return 255<<8 | X<<16 | 255<<24;
+    if( hh < 4 )
+        return X<<8 | 255<<16 | 255<<24;
+    if( hh < 5 )
+        return X | 255<<16 | 255<<24;
+    else
+        return 255 | X<<16 | 255<<24;
+}
 
 void init(){
     Buffer[0] = malloc(1002*1002);
@@ -27,7 +53,7 @@ void render(){
     for(int i=1; i<=Height; ++i){
         for(int j=1; j<=Width; ++j){
             if( Buffer[0][k] )
-                *p = -1;
+                *p = Width<=1 ? -1 : pick_color((float)(j-1)/(Width-1)-time_shift);
             else
                 *p = 0;
             ++p;
@@ -150,8 +176,12 @@ void step(){
 }
 
 void main_loop(){
-    if( playing )
+    if( playing ){
+        time_shift += .003;
+        if( time_shift > 1 )
+            time_shift = 0;
         step();
+    }
 
     SDL_Event event;
     while( SDL_PollEvent(&event) ){
