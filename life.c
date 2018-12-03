@@ -11,6 +11,7 @@ int Width=0, Height=0;
 char *Buffer[2] = {NULL, NULL};
 bool Wrap = false;
 SDL_Window * window = NULL;
+bool playing = false;
 
 void init(){
     Buffer[0] = malloc(1002*1002);
@@ -42,7 +43,7 @@ void random_init(){
     int k=Width+3;
     for(int i=1; i<=Height; ++i){
         for(int j=1; j<=Width; ++j)
-            Buffer[0][k++] = random() % 2;
+            Buffer[0][k++] = !(random() % 3);
         k += 2;
     }
 }
@@ -149,21 +150,32 @@ void step(){
 }
 
 void main_loop(){
-    step();
+    if( playing )
+        step();
+
+    SDL_Event event;
+    while( SDL_PollEvent(&event) ){
+        if( event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT ){
+            int k = (event.button.y+1)*(Width+2) + event.button.x + 1;
+            Buffer[0][k] = !Buffer[0][k];
+            render();
+        }
+    }
 }
 
 void play(){
-    emscripten_set_main_loop(main_loop, 0, 0);
+    playing = true;
 }
 
 void stop(){
-    emscripten_cancel_main_loop();
+    playing = false;
     render();
 }
 
 int main(){
     random_init();
     render();
+    playing = true;
     emscripten_set_main_loop(main_loop, 0, 0);
     return 0;
 }
