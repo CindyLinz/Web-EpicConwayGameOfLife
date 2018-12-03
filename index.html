@@ -6,6 +6,9 @@
     <center>
       <button id=random_init>random</button>
       <label><input type=checkbox id=wrap_toggle> wrap</label>
+      <br>
+      <label>width <input id=width type=range min=1 max=1000 value=200 step=1></label><br>
+      <label>height <input id=height type=range min=1 max=1000 value=200 step=1></label><br>
       <br><br>
       <canvas id=board></canvas>
     </center>
@@ -18,17 +21,33 @@
               , resize: Module.cwrap('resize', null, ['number', 'number'])
               , random_init: Module.cwrap('random_init', null, [])
               , render: Module.cwrap('render', null, [])
+              , main: Module.cwrap('main', 'number', [])
+              , init: Module.cwrap('init', null, [])
               };
+
+            Life.init();
 
             Life.set_wrap(document.querySelector('#wrap_toggle').checked ? 1 : 0);
             document.querySelector('#wrap_toggle').onchange = function(){
               Life.set_wrap(this.checked);
             };
 
+            function pick_size(){
+              Life.resize(document.querySelector('#width').value, document.querySelector('#height').value);
+              Life.render();
+            }
+            pick_size();
+            document.querySelector('#width').addEventListener('input', pick_size, false);
+            document.querySelector('#height').addEventListener('input', pick_size, false);
+            document.querySelector('#width').addEventListener('mouseup', function(ev){ ev.target.blur() }, false);
+            document.querySelector('#height').addEventListener('mouseup', function(ev){ ev.target.blur() }, false);
+
             document.querySelector('#random_init').onclick = function(){
               Life.random_init();
               Life.render();
             };
+
+            Life.main();
           }
         }
     </script>

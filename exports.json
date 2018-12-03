@@ -3,4 +3,5 @@
 , "_set_wrap"
 , "_random_init"
 , "_render"
+, "_init"
 ]
