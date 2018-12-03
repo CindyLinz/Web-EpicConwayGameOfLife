@@ -111,7 +111,7 @@ void resize(int width, int height){
 
         if( window )
             SDL_DestroyWindow(window);
-        window = SDL_CreateWindow("", 0, 0, width, height, 0);
+        window = SDL_CreateWindow(NULL, 0, 0, width, height, 0);
     }
     //random_init();
 }
