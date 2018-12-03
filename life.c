@@ -152,6 +152,15 @@ void main_loop(){
     step();
 }
 
+void play(){
+    emscripten_set_main_loop(main_loop, 0, 0);
+}
+
+void stop(){
+    emscripten_cancel_main_loop();
+    render();
+}
+
 int main(){
     random_init();
     render();

@@ -4,6 +4,7 @@
   </head>
   <body>
     <center>
+      <button id=play_toggle>pause</button>
       <button id=random_init>random</button>
       <label><input type=checkbox id=wrap_toggle> wrap</label>
       <br>
@@ -23,6 +24,8 @@
               , render: Module.cwrap('render', null, [])
               , main: Module.cwrap('main', 'number', [])
               , init: Module.cwrap('init', null, [])
+              , play: Module.cwrap('play', null, [])
+              , stop: Module.cwrap('stop', null, [])
               };
 
             Life.init();
@@ -45,6 +48,18 @@
             document.querySelector('#random_init').onclick = function(){
               Life.random_init();
               Life.render();
+            };
+
+            document.querySelector('#play_toggle').onclick = function(){
+              if( this.innerHTML == 'pause' ){
+                Life.stop();
+                Life.render();
+                this.innerHTML = 'play';
+              }
+              else{
+                Life.play();
+                this.innerHTML = 'pause';
+              }
             };
 
             Life.main();

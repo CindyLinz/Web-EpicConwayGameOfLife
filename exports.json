@@ -4,4 +4,6 @@
 , "_random_init"
 , "_render"
 , "_init"
+, "_play"
+, "_stop"
 ]
