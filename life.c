@@ -18,8 +18,6 @@ float time_shift = 0;
 static inline int32_t pick_color(float hue){
     if( hue < 0 )
         hue += 1;
-    float c = 1;
-    float m = 0;
     float hh = hue * 6;
     float x = 1 - fabsf(fmodf(hh, 2) - 1);
     int X = (int)(x * 255 + .5);
